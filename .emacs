@@ -150,7 +150,9 @@
 (yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
 (require 'desktop)
-(desktop-save-mode 1) ;; Switch on desktop.el
+(desktop-save-mode 1) ;; auto saving
+(desktop-change-dir "~/.emacs.d/desktop")
+(setq desktop-restore-eager 4) ;; load the first 4 buffers at startup, lazy load rest
 
 (defun my-desktop-save ()
     (interactive)
