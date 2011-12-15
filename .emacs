@@ -151,7 +151,6 @@
 
 (require 'desktop)
 (desktop-save-mode 1) ;; auto saving
-(desktop-change-dir "~/.emacs.d/desktop")
 (setq desktop-restore-eager 4) ;; load the first 4 buffers at startup, lazy load rest
 
 (defun my-desktop-save ()
@@ -212,3 +211,17 @@
 ;; disables menu bar and tool bart
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(desktop-load-locked-desktop (quote ask))
+ '(desktop-path (quote ("." "~/.emacs.d/desktop" "~"))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
