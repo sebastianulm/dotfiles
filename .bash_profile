@@ -32,6 +32,19 @@ export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
 
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
 
+function trcat()
+{
+    if [[ -z "$2" ]];
+    then
+        BRANCH="mainline"
+    else
+        BRANCH="$2"
+    fi
+
+    echo "Running: svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}"
+    svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}
+}
+
 if [ "$PS1" ]; then
     # don't put duplicate lines in the history. See bash(1) for more options
     export HISTCONTROL=ignoredups
