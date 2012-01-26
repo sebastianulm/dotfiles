@@ -34,6 +34,12 @@ alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .
 
 function trcat()
 {
+    if [[ -z "${1##[:space:]*}" ]];
+    then
+        echo "Usage: trcat <full file path> <branch to replace from (optional)>"
+        return
+    fi
+
     if [[ -z "$2" ]];
     then
         BRANCH="mainline"
