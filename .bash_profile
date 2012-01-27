@@ -51,6 +51,41 @@ function trcat()
     svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}
 }
 
+function rapid_develop()
+{
+    local action="174" # tweak off concat/compress by default
+    if [[ !(-z "${1##[:space:]*}") ]]; then
+    case $1 in
+        on)
+            action="174"
+            ;;
+        off)
+            action="173"
+            ;;
+    esac
+    fi
+
+    if [ -z "$2" ];
+    then
+        target="localhost"
+    else
+        target="$2"
+    fi
+
+    params=("JS_CONCAT" "JS_COMPRESS" "CSS_CONCAT" "CSS_COMPRESS")
+    for i in "${params[@]}"
+    do
+        tweak_param $target $i $action
+    done
+}
+
+## Host, param name (e.g. JS_CONCAT), action (173=enable, 174=disable)
+function tweak_param()
+{
+    echo "curl http://${1}/TweakParams?param=${2}&action=${3}"
+    `curl http://${1}/TweakParams?param=${2}&action=${3} >/dev/null 2>&1`
+}
+
 if [ "$PS1" ]; then
     # don't put duplicate lines in the history. See bash(1) for more options
     export HISTCONTROL=ignoredups
@@ -93,4 +128,3 @@ fi
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
-
