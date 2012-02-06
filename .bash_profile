@@ -53,18 +53,6 @@ function trcat()
 
 function rapid_develop()
 {
-    local action="174" # tweak off concat/compress by default
-    if [[ !(-z "${1##[:space:]*}") ]]; then
-    case $1 in
-        on)
-            action="174"
-            ;;
-        off)
-            action="173"
-            ;;
-    esac
-    fi
-
     if [ -z "$2" ];
     then
         target="localhost"
@@ -75,15 +63,9 @@ function rapid_develop()
     params=("JS_CONCAT" "JS_COMPRESS" "CSS_CONCAT" "CSS_COMPRESS")
     for i in "${params[@]}"
     do
-        tweak_param $target $i $action
+        echo "tweak feature $1 $i"
+        tweak feature $1 $i
     done
-}
-
-## Host, param name (e.g. JS_CONCAT), action (173=enable, 174=disable)
-function tweak_param()
-{
-    echo "curl http://${1}/TweakParams?param=${2}&action=${3}"
-    `curl http://${1}/TweakParams?param=${2}&action=${3} >/dev/null 2>&1`
 }
 
 if [ "$PS1" ]; then
