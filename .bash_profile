@@ -24,7 +24,7 @@ function trtop {
         fi
 }
 
-export ACK_OPTIONS="--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)"
+##export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
 
 export PATH=$PATH:/Users/nathan/Library/android-sdk-mac_x86/tools/:/usr/local/pgsql/bin/:/Users/nathan/Library/android-sdk-mac_x86/platform-tools/
 
@@ -66,6 +66,11 @@ function rapid_develop()
         echo "tweak feature $1 $i"
         tweak feature $1 $i
     done
+}
+
+function svn_conflicts()
+{
+    svn st | grep "^\w*C"
 }
 
 if [ "$PS1" ]; then

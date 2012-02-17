@@ -1,3 +1,6 @@
 [submodule ".emacs.d/ethan-wspace"]
 	path = .emacs.d/ethan-wspace
 	url = https://github.com/glasserc/ethan-wspace.git
+[submodule ".emacs.d/yasnippet/snippets/text-mode/java-mode"]
+	path = .emacs.d/yasnippet/snippets/text-mode/java-mode
+	url = git://github.com/nekop/yasnippet-java-mode.git
