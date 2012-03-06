@@ -133,8 +133,6 @@
 (defvar backup-dir (concat "/tmp/emacs_backups/" (user-login-name) "/"))
 (setq backup-directory-alist (list (cons "." backup-dir)))
 
-(setq semantic-load-turn-useful-things-on t)
-
 (require 'auto-complete)
 (global-auto-complete-mode t)
 '(global-semantic-idle-completions-mode)
@@ -178,8 +176,29 @@
 ;; make option key meta
 (setq mac-option-modifier 'meta)
 
-;; Load CEDET.
+(put 'upcase-region 'disabled nil)
+
+;; disables menu bar and tool bart
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(desktop-load-locked-desktop (quote ask))
+ '(desktop-path (quote ("." "~/.emacs.d/desktop" "~"))))
+(Custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
+
+;; Load CEDET. Do this last so it screws the least amount of other things up when it barfs
 ;; See cedet/common/cedet.info for configuration details.
+(setq semantic-load-turn-useful-things-on t)
 (load-file "~/.emacs.d/cedet/common/cedet.el")
 
 ;; Enable EDE (Project Management) features
@@ -219,23 +238,3 @@
 (require 'semantic-ia)
 (require 'semantic-gcc)
 (semantic-mru-bookmark-mode)
-
-(put 'upcase-region 'disabled nil)
-
-;; disables menu bar and tool bart
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(desktop-load-locked-desktop (quote ask))
- '(desktop-path (quote ("." "~/.emacs.d/desktop" "~"))))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
