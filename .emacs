@@ -180,7 +180,7 @@
 
 ;; Load CEDET.
 ;; See cedet/common/cedet.info for configuration details.
-(load-file "~/cedet/common/cedet.el")
+(load-file "~/.emacs.d/cedet/common/cedet.el")
 
 ;; Enable EDE (Project Management) features
 (global-ede-mode 1)

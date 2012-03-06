@@ -4,3 +4,6 @@
 [submodule ".emacs.d/yasnippet/snippets/text-mode/java-mode"]
 	path = .emacs.d/yasnippet/snippets/text-mode/java-mode
 	url = git://github.com/nekop/yasnippet-java-mode.git
+[submodule ".emacs.d/cedet"]
+	path = .emacs.d/cedet
+	url = git://github.com/emacs-pkg-mirrors/cedet.git
