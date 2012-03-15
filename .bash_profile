@@ -73,6 +73,11 @@ function svn_conflicts()
     svn st | grep "^\w*C"
 }
 
+function get_patches()
+{
+    rsync -are ssh gnm-dev.dhcp.tripadvisor.com:~/Desktop/patches/ ~/Desktop/patches/
+}
+
 if [ "$PS1" ]; then
     # don't put duplicate lines in the history. See bash(1) for more options
     export HISTCONTROL=ignoredups
