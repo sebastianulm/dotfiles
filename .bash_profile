@@ -28,9 +28,12 @@ export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --inv
 
 export PATH=$PATH:~/bin/
 
-if [ -e "~/.tripadvisor" ]
-then
+if [ -e ~/.tripadvisor ]; then
     export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
+fi
+
+if [ -e ~/.bash_specific ]; then
+    . ~/.bash_specific
 fi
 
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
