@@ -36,7 +36,34 @@ if [ -f ~/.bash_specific ]; then
     source ~/.bash_specific
 fi
 
+if [[ !("$PROMPT_COMMAND" =~ "findtrtop") ]];
+    then    
+    export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
+fi
+
+# Point back to my macbook by default
+##if [ -n "$SSH_CONNECTION" ];
+##    then
+##    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
+##fi
+
+alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
+
+function spatch()
+{
+    patch -p0 --dry-run < "$1"
+    cmd="patch -p0 < $1"
+    echo "Everything OK? patch? [Y/n]"
+    read answer
+    if [$answer -eq "y"]; then
+        echo `$cmd`
+    elif [$answer -eq ""]; then
+        echo `$cmd`
+    else
+        echo "Aborting"
+    fi
+}
 
 function trcat()
 {
@@ -57,7 +84,7 @@ function trcat()
     svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}
 }
 
-function rapid_develop()
+function rdt() ## Rapid develop tweak
 {
     if [ -z "$2" ];
     then
