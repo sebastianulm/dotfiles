@@ -111,6 +111,23 @@ function get_patches()
     rsync -are ssh gnm-dev.dhcp.tripadvisor.com:~/Desktop/patches/ ~/Desktop/patches/
 }
 
+function selenium_mobile()
+{
+    echo "Add mobile tests as a suite you dummy!"
+}
+
+function selenium_tablet()
+{
+    $TRTOP/scripts/pythontr.sh $TRTOP/tests/selenium/run-tests -t tablet
+}
+
+# Run both
+function selenium_all()
+{
+    selenium_mobile
+    selenium_tablet
+}
+
 if [ "$PS1" ]; then
     # don't put duplicate lines in the history. See bash(1) for more options
     export HISTCONTROL=ignoredups
