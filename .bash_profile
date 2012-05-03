@@ -42,13 +42,44 @@ if [[ !("$PROMPT_COMMAND" =~ "findtrtop") ]];
 fi
 
 # Point back to my macbook by default
-##if [ -n "$SSH_CONNECTION" ];
-##    then
-##    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
-##fi
+if [ -n "$SSH_CONNECTION" ];
+    then
+    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
+fi
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
+
+function gotr()
+{
+    cd $TRTOP
+}
+
+function gojs()
+{
+    cd $TRTOP/site/js3/
+}
+
+function gov()
+{
+    cd $TRTOP/site/velocity_redesign/
+}
+
+function goja
+{
+    cd $TRTOP/tr/com/TripResearch/
+}
+
+function gocss
+{
+    cd $TRTOP/site/css2/
+}
+
+function tfv()
+{
+    echo "tweak flush velocity"
+    tweak flush velocity
+}
 
 function spatch()
 {
