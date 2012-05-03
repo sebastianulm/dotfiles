@@ -189,7 +189,7 @@
   ;; If there is more than one, they won't work right.
  '(desktop-load-locked-desktop (quote ask))
  '(desktop-path (quote ("." "~/.emacs.d/desktop" "~"))))
-(Custom-set-faces
+(custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
