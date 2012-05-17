@@ -75,6 +75,16 @@ function gocss
     cd $TRTOP/site/css2/
 }
 
+function mcss
+{
+    make -C $TRTOP/site/css2/ && tfv
+}
+
+function golog
+{
+    ssh nmdev screen -r log ## TODO not quite right
+}
+
 function tfv()
 {
     echo "tweak flush velocity"
