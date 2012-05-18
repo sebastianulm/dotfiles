@@ -49,6 +49,8 @@ fi
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
+alias df='df -h'
+alias du='du -h'
 
 function gotr()
 {
