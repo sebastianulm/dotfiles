@@ -1,3 +1,4 @@
+
 function findtrtop {
         candidate=`pwd`
         while true; do
@@ -28,6 +29,14 @@ export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --inv
 
 export PATH=$PATH:~/bin/
 
+alias apt-get='sudo apt-get'
+
+export WHTOP='/home/nathan/warehouse'
+
+# Conveniences for switching the environment for the clusters
+alias uc_prod=". $WHTOP/clusters/prod/config/env.bash $WHTOP/clusters/prod"
+alias uc_adhoc=". $WHTOP/clusters/adhoc/config/env.bash $WHTOP/clusters/adhoc"
+
 if [ -f ~/.tripadvisor ]; then
     export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
 fi
@@ -42,10 +51,10 @@ if [[ !("$PROMPT_COMMAND" =~ "findtrtop") ]];
 fi
 
 # Point back to my macbook by default
-if [ -n "$SSH_CONNECTION" ];
-    then
-    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
-fi
+##if [ -n "$SSH_CONNECTION" ];
+##    then
+##    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
+##fi
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
@@ -57,7 +66,7 @@ function gotr()
 
 function gojs()
 {
-    cd $TRTOP/site/js3/
+    cd $TRTOP/site/js3/src/
 }
 
 function gov()
@@ -75,10 +84,27 @@ function gocss
     cd $TRTOP/site/css2/
 }
 
+function gos
+{
+    cd $TRTOP/site/
+}
+
 function tfv()
 {
     echo "tweak flush velocity"
     tweak flush velocity
+}
+
+function tfj ()
+{
+    echo "tweak flush js3"
+    tweak flush js3
+}
+
+function tfc()
+{
+    echo "tweak flush css2"
+    tweak flush css2
 }
 
 function spatch()
@@ -137,6 +163,11 @@ function svn_conflicts()
     svn st | grep "^\w*C"
 }
 
+function svn_rm_nonworking()
+{
+    svn st –no-ignore |grep -e ^\? -e ^I | awk ‘{print $2}’| xargs -r rm -r
+}
+
 function get_patches()
 {
     rsync -are ssh gnm-dev.dhcp.tripadvisor.com:~/Desktop/patches/ ~/Desktop/patches/
@@ -157,6 +188,11 @@ function selenium_all()
 {
     selenium_mobile
     selenium_tablet
+}
+
+function trunit
+{
+    javatr.sh org.junit.runner.JUnitCore com.TripResearch.${1}
 }
 
 if [ "$PS1" ]; then

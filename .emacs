@@ -57,13 +57,21 @@
   (setq c-basic-offset 4)
   (setq indent-tabs-mode nil))
 
+;; need to fix async run so it wont bother me, close though
+(defun vm-save-hook()
+  (if (= (shell-command "tweak flush velocity &")
+        0)
+  (message "Flushed velocity")))
+
 (defun trip-vm-mode()
   (interactive)
   (turn-on-vtl-mode)
   (auto-complete-mode t) ;; velocity doesn't have a major mode, so enable ac manually
   (message "* --[ Loading VTL syntax hilighting ]--")
   (setq c-basic-offset 2)
-  (setq indent-tabs-mode nil))
+  (setq indent-tabs-mode nil)
+;;  (add-hook 'after-save-hook 'vm-save-hook nil 'true)
+)
 
 ;; keeps whitespace clean when it is already
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/ethan-wspace/lisp"))
