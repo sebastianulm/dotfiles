@@ -15,7 +15,8 @@ function findtrtop {
         done
 }
 
-function trtop {
+function trtop
+{
         if (( $# == 1 )); then
                 oldscripts=$TRTOP/scripts
                 export TRTOP=$1
@@ -58,6 +59,8 @@ fi
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
+alias df='df -h'
+alias du='du -h'
 
 function gotr()
 {
@@ -74,19 +77,29 @@ function gov()
     cd $TRTOP/site/velocity_redesign/
 }
 
-function goja
+function goja()
 {
     cd $TRTOP/tr/com/TripResearch/
 }
 
-function gocss
+function gocss()
 {
     cd $TRTOP/site/css2/
 }
 
-function gos
+function gos()
 {
     cd $TRTOP/site/
+}
+
+function mcss()
+{
+    make -C $TRTOP/site/css2/ && tfv
+}
+
+function golog()
+{
+    ssh nmdev screen -r log ## TODO not quite right
 }
 
 function tfv()
@@ -139,6 +152,15 @@ function trcat()
 
     echo "Running: svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}"
     svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}
+}
+
+function trdiff()
+{
+    if (( $# == 1 )); then
+        svn diff > "~/Desktop/patches/${1}"
+    else
+        echo "Pick a bug number or name"
+    fi
 }
 
 function rdt() ## Rapid develop tweak
