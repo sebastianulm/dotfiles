@@ -29,9 +29,23 @@ function trtop
 # svn diff -B, then copies to ~/Deskop/patches/BRANCHNAME_revision
 function brdiff
 {
-    svn diff -B
-    parse_svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
-    original_dest="${HOME}/Desktop/patches/${parse_svn_branch}"
+    svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
+
+    if [[ "$svn_branch" == "MAINLINE" || "$svn_branch" == "PRERELEASE" ]]; then
+        echo "taking MAINLINE or PRERELEASE diff"
+        if (( $# == 1 )); then
+            svn_branch=$1
+            svn diff > diffs.txt || return $?
+        else
+            echo "usage: brdiff <bug number>"
+            return 1
+        fi
+    else
+        svn diff -B
+    fi
+
+    original_dest="${HOME}/Desktop/patches/${svn_branch}"
+
     destfile=$original_dest
     revisions=1
 
