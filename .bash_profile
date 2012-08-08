@@ -26,6 +26,24 @@ function trtop
         fi
 }
 
+# svn diff -B, then copies to ~/Deskop/patches/BRANCHNAME_revision
+function brdiff
+{
+    svn diff -B
+    parse_svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
+    original_dest="${HOME}/Desktop/patches/${parse_svn_branch}"
+    destfile=$original_dest
+    revisions=1
+
+    while [ -f "$destfile" ]; do
+        destfile="${original_dest}_${revisions}"
+        revisions=$[revisions + 1]
+    done
+
+    echo "copying diffs.txt to $destfile"
+    cp diffs.txt $destfile
+}
+
 export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
 
 export PATH=$PATH:~/bin/
