@@ -27,7 +27,7 @@ function trtop
 }
 
 # svn diff -B, then copies to ~/Deskop/patches/BRANCHNAME_revision
-function brdiff
+function trdiff
 {
     svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
 
@@ -184,15 +184,6 @@ function trcat()
 
     echo "Running: svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}"
     svntr cat //${BRANCH}/${1} > ${TRTOP}/${1}
-}
-
-function trdiff()
-{
-    if (( $# == 1 )); then
-        svn diff > "~/Desktop/patches/${1}"
-    else
-        echo "Pick a bug number or name"
-    fi
 }
 
 function rdt() ## Rapid develop tweak
