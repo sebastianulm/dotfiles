@@ -89,6 +89,27 @@ fi
 ##    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
 ##fi
 
+function geo()
+{
+    local config="$TRTOP/config/hosts/$(hostname -s).ini"
+    sed -i 's/^LOCATIONSTORE_ROOT_ID=[0-9]\+$/LOCATIONSTORE_ROOT_ID='$1'/' $config
+    local magictmp=$(mktemp)
+    make -C $TRTOP tree_setup >> "$magictmp" 2>&1
+    local ret="$?"
+    if [[ $ret != 0 ]]; then
+        echo "Something broked!"
+        cat "$magictmp"
+    fi
+    rm $magictmp
+    return $ret
+}
+
+function mass_root()
+{
+    geo 28942
+}
+
+
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
 alias df='df -h'
