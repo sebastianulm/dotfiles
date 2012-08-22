@@ -56,6 +56,7 @@ function trdiff
 
     echo "copying diffs.txt to $destfile"
     cp diffs.txt $destfile
+    push_patches
 }
 
 export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
@@ -237,6 +238,11 @@ function svn_rm_nonworking()
 function get_patches()
 {
     rsync -are ssh gnm-dev.dhcp.tripadvisor.com:~/Desktop/patches/ ~/Desktop/patches/
+}
+
+function push_patches()
+{
+    rsync -are ssh ~/Desktop/patches/ nmerritt.local:~/Desktop/patches/
 }
 
 function selenium_mobile()
