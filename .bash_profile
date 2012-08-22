@@ -31,8 +31,8 @@ function trdiff
 {
     svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
 
-    if [[ "$svn_branch" == "MAINLINE" || "$svn_branch" == "PRERELEASE" ]]; then
-        echo "taking MAINLINE or PRERELEASE diff"
+    if [[ "$svn_branch" == "MAINLINE" || "$svn_branch" == "PRERELEASE" || "$svn_branch" == "PRODUCTION" ]]; then
+        echo "taking MAINLINE/PRERELEASE/PRODUCTION diff"
         if (( $# == 1 )); then
             svn_branch=$1
             svn diff > diffs.txt || return $?
