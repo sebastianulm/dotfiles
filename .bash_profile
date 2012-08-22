@@ -148,7 +148,7 @@ function gos()
 
 function mcss()
 {
-    make -C $TRTOP/site/css2/ && tfv
+    make -C $TRTOP/site/css2/ && tfc && tfv
 }
 
 function golog()
