@@ -63,6 +63,12 @@
 (autopair-global-mode)
 
 ;; python magic
+
+(setq py-install-directory "~/.emacs.d/python-mode")
+(add-to-list 'load-path py-install-directory)
+(require 'python-mode)
+(require 'ipython)
+
 ;; add pylookup to your loadpath, ex) "~/.lisp/addons/pylookup"
 (setq pylookup-dir "~/.emacs.d/pylookup")
 (add-to-list 'load-path pylookup-dir)
@@ -71,10 +77,10 @@
 
 (add-hook 'python-mode-hook
           #'(lambda () (push '(?' . ?')
-                              (getf autopair-extra-pairs :code))
- (setq autopair-handle-action-fns
-      (list #'autopair-default-handle-action
-            #'autopair-python-triple-quote-action))))
+                             (getf autopair-extra-pairs :code))
+              (setq autopair-handle-action-fns
+                    (list #'autopair-default-handle-action
+                          #'autopair-python-triple-quote-action))))
 
 ;; set executable file and db file
 (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
@@ -109,6 +115,7 @@
   (interactive)
   (python-mode)
   (lambda-mode 1)
+  (py-load-pymacs-p t)
 ;;  (flymake-mode t) TODO!
   (setq indent-tabs-mode nil))
 
