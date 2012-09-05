@@ -25,7 +25,7 @@
 (add-hook 'xml-mode-hook 'turn-on-vtl-mode t t)
 (add-hook 'text-mode-hook 'turn-on-vtl-mode t t)
 
-;; flymake error highlighting for JS
+;; flymake error highlighting for CSS/JS
 
 (when (load "flymake" t)
   (defun flymake-closure-init ()
@@ -36,11 +36,25 @@
                         (file-name-directory buffer-file-name))))
       (list "~/software/google-closure/closure.sh" (list local-file))))
 
+  (defun flymake-css-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "cssparse" (list local-file))))
+
   (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.js\\'" flymake-closure-init)))
+               '("\\.js\\'" flymake-closure-init)
+               '("\\.css\\'" flymake-css-init))
 
+  (add-to-list 'flymake-err-line-patterns
+               '("\\(.*\\) \\[\\([0-9]+\\):\\([0-9]+\\): \\(.*\\)\\]"
+                 nil 2 3 1))
+)
 
-;;; We define modes for c++, python, and java
+;;; Custom mode definitions
+
 (defun robocup-c++-mode ()
   "C++ mode made to fit the way I like it."
   (interactive)
@@ -59,6 +73,7 @@
 (defun robocup-python-mode ()
   (interactive)
   (python-mode)
+;;  (flymake-mode t) TODO!
   (setq indent-tabs-mode nil))
 
 (defun robocup-java-mode ()
@@ -72,6 +87,11 @@
   (flymake-mode t)
   (setq c-basic-offset 4)
   (setq indent-tabs-mode nil))
+
+(defun trip-css-mode()
+  (interactive)
+  (css-mode)
+  (flymake-mode t))
 
 ;; need to fix async run so it wont bother me, close though
 (defun vm-save-hook()
@@ -128,7 +148,7 @@
                                 ("\\.css\\'" . css-mode)
                                 ("\\.vm\\'" . trip-vm-mode)
                                 ("\\.js\\'" . trip-js-mode)
-                                ("\\.css\\'" . css-mode)
+                                ("\\.css\\'" . trip-css-mode)
                                 ) auto-mode-alist))
 
 ;;; This makes trailing whitespace be highlighted
