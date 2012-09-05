@@ -30,14 +30,16 @@ function trtop
 function trdiff
 {
     svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
+    bug_number=0
 
     if [[ "$svn_branch" == "MAINLINE" || "$svn_branch" == "PRERELEASE" || "$svn_branch" == "PRODUCTION" ]]; then
         echo "taking MAINLINE/PRERELEASE/PRODUCTION diff"
         if (( $# == 1 )); then
             svn_branch=$1
+            bug_number=$1
             svn diff > diffs.txt || return $?
         else
-            echo "usage: brdiff <bug number>"
+            echo "usage: trdiff <bug number>"
             return 1
         fi
     else
@@ -56,7 +58,21 @@ function trdiff
 
     echo "copying diffs.txt to $destfile"
     cp diffs.txt $destfile
-    push_patches
+
+    # Gets username/pw from SVNTR login
+    decoded=`echo $SVNTR_AUTH | base64 -d`
+    auth=(${decoded//:/ })
+    username="${auth[0]}@tripadvisor.com"
+    tabugz="bugz -b https://bugs.tripadvisor.com/ -u \"$username\" -p \"${auth[1]}\""
+
+    # Attach the patch to a bug automatically & update bug status
+    if [[ "$bug_number" -gt 60000 ]]; then
+## TODO: error-ing out, something about xml.parsers
+
+        echo "Uploading diff to bugzilla & grabbing bug (NOT)"
+#        $tabugz attach --patch -t 'proposed fix' -d "auto-attaching $destfile" $bug_number $destfile
+#        $tabugz modify -s ASSIGNED -a "$username" $bug_number
+    fi
 }
 
 export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
@@ -84,11 +100,11 @@ if [[ !("$PROMPT_COMMAND" =~ "findtrtop") ]];
     export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
 fi
 
-# Point back to my macbook by default
-##if [ -n "$SSH_CONNECTION" ];
-##    then
-##    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
-##fi
+# Point back to my macbook
+function xtomac()
+{
+    export DISPLAY=nmerritt.dhcp.tripadvisor.com:0
+}
 
 function geo()
 {
@@ -223,6 +239,17 @@ function rdt() ## Rapid develop tweak
         echo "tweak feature $1 $i"
         tweak feature $1 $i
     done
+}
+
+## Functions to help with logging
+function taerror()
+{
+    tail -f /etc/httpd-MAINLINE/logs/tripadvisor.log | grep -i error
+}
+
+function talog()
+{
+    tail -f /etc/httpd-MAINLINE/logs/tripadvisor.log
 }
 
 function svn_conflicts()
