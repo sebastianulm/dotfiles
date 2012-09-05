@@ -7,3 +7,6 @@
 [submodule ".emacs.d/cedet"]
 	path = .emacs.d/cedet
 	url = git://github.com/emacs-pkg-mirrors/cedet.git
+[submodule ".emacs.d/pylookup"]
+	path = .emacs.d/pylookup
+	url = http://github.com/tsgates/pylookup.git
