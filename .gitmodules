@@ -10,3 +10,6 @@
 [submodule ".emacs.d/pylookup"]
 	path = .emacs.d/pylookup
 	url = http://github.com/tsgates/pylookup.git
+[submodule ".emacs.d/autopair"]
+	path = .emacs.d/autopair
+	url = git://github.com/capitaomorte/autopair.git

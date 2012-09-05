@@ -53,6 +53,41 @@
                  nil 2 3 1))
 )
 
+;; lambda mode
+(require 'lambda-mode)
+(setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
+
+;; autopair - enabled in all buffers
+(add-to-list 'load-path "~/.emacs.d/autopair")
+(require 'autopair)
+(autopair-global-mode)
+
+;; python magic
+;; add pylookup to your loadpath, ex) "~/.lisp/addons/pylookup"
+(setq pylookup-dir "~/.emacs.d/pylookup")
+(add-to-list 'load-path pylookup-dir)
+;; load pylookup when compile time
+(eval-when-compile (require 'pylookup))
+
+(add-hook 'python-mode-hook
+          #'(lambda () (push '(?' . ?')
+                              (getf autopair-extra-pairs :code))
+ (setq autopair-handle-action-fns
+      (list #'autopair-default-handle-action
+            #'autopair-python-triple-quote-action))))
+
+;; set executable file and db file
+(setq pylookup-program (concat pylookup-dir "/pylookup.py"))
+(setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
+
+;; to speedup, just load it on demand
+(autoload 'pylookup-lookup "pylookup"
+  "Lookup SEARCH-TERM in the Python HTML indexes." t)
+(autoload 'pylookup-update "pylookup"
+  "Run pylookup-update and create the database at `pylookup-db-file'." t)
+
+(global-set-key "\C-cp" 'pylookup-lookup)
+
 ;;; Custom mode definitions
 
 (defun robocup-c++-mode ()
@@ -73,6 +108,7 @@
 (defun robocup-python-mode ()
   (interactive)
   (python-mode)
+  (lambda-mode 1)
 ;;  (flymake-mode t) TODO!
   (setq indent-tabs-mode nil))
 
