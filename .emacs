@@ -136,11 +136,11 @@
   (css-mode)
   (flymake-mode t))
 
-;; need to fix async run so it wont bother me, close though
+;; TODO: generify so it can flush css/js/features too
 (defun vm-save-hook()
-  (if (= (shell-command "tweak flush velocity &")
-        0)
-  (message "Flushed velocity")))
+  (interactive)
+  (start-process "async-flush-velocity" "*Messages*" "tweak" "flush velocity")
+  (message "Flushed velocity"))
 
 (defun trip-vm-mode()
   (interactive)
@@ -149,8 +149,7 @@
   (message "* --[ Loading VTL syntax hilighting ]--")
   (setq c-basic-offset 2)
   (setq indent-tabs-mode nil)
-;;  (add-hook 'after-save-hook 'vm-save-hook nil 'true)
-)
+  (add-hook 'after-save-hook 'vm-save-hook nil 'true))
 
 ;; keeps whitespace clean when it is already
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/ethan-wspace/lisp"))
