@@ -25,6 +25,21 @@
 (add-hook 'xml-mode-hook 'turn-on-vtl-mode t t)
 (add-hook 'text-mode-hook 'turn-on-vtl-mode t t)
 
+;; flymake error highlighting for JS
+
+(when (load "flymake" t)
+  (defun flymake-closure-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "~/software/google-closure/closure.sh" (list local-file))))
+
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.js\\'" flymake-closure-init)))
+
+
 ;;; We define modes for c++, python, and java
 (defun robocup-c++-mode ()
   "C++ mode made to fit the way I like it."
@@ -54,6 +69,7 @@
 (defun trip-js-mode()
   (interactive)
   (js-mode)
+  (flymake-mode t)
   (setq c-basic-offset 4)
   (setq indent-tabs-mode nil))
 
