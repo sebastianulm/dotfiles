@@ -139,7 +139,7 @@
 ;; TODO: generify so it can flush css/js/features too
 (defun vm-save-hook()
   (interactive)
-  (start-process "async-flush-velocity" "*Messages*" "tweak" "flush velocity")
+  (start-process "async-flush-velocity" "*Messages*" "tweak" "FLUSH_VELOCITY")
   (message "Flushed velocity"))
 
 (defun trip-vm-mode()
@@ -192,9 +192,6 @@
                                 ("\\.js\\'" . trip-js-mode)
                                 ("\\.css\\'" . trip-css-mode)
                                 ) auto-mode-alist))
-
-;;; This makes trailing whitespace be highlighted
-;;(setq-default show-trailing-whitespace t)
 
 ;; Put autosave files (ie #foo#) in one place, *not*
 ;; scattered all over the file system!
