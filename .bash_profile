@@ -58,6 +58,7 @@ function trdiff
 
     echo "copying diffs.txt to $destfile"
     cp diffs.txt $destfile
+    push_patches
 
     # Gets username/pw from SVNTR login
     decoded=`echo $SVNTR_AUTH | base64 -d`
