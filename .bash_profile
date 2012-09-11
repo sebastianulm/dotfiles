@@ -127,6 +127,11 @@ function mass_root()
     geo 28942
 }
 
+update_translations()
+{
+    $TRTOP/scripts/i18n-dump-to-bundles.csh
+}
+
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
