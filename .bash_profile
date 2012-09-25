@@ -64,15 +64,13 @@ function trdiff
     decoded=`echo $SVNTR_AUTH | base64 -d`
     auth=(${decoded//:/ })
     username="${auth[0]}@tripadvisor.com"
-    tabugz="bugz -b https://bugs.tripadvisor.com/ -u \"$username\" -p \"${auth[1]}\""
+    tabugz="bugz -b https://bugs.tripadvisor.com/ -u $username -p ${auth[1]}"
 
     # Attach the patch to a bug automatically & update bug status
     if [[ "$bug_number" -gt 60000 ]]; then
-## TODO: error-ing out, something about xml.parsers
-
-        echo "Uploading diff to bugzilla & grabbing bug (NOT)"
-#        $tabugz attach --patch -t 'proposed fix' -d "auto-attaching $destfile" $bug_number $destfile
-#        $tabugz modify -s ASSIGNED -a "$username" $bug_number
+        echo "Uploading diff to bugzilla & grabbing bug"
+        $tabugz attach --patch -d "proposed fix in $destfile" $bug_number $destfile
+        $tabugz modify -s ASSIGNED -a "$username" $bug_number
     fi
 }
 
@@ -132,6 +130,17 @@ update_translations()
     $TRTOP/scripts/i18n-dump-to-bundles.csh
 }
 
+update_fbrs()
+{
+    return
+}
+
+# run daily via cron to update FBRS & translations
+data_update()
+{
+    update_translations
+    update_fbrs
+}
 
 alias top='htop'
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
@@ -256,6 +265,18 @@ function taerror()
 function talog()
 {
     tail -f /etc/httpd-MAINLINE/logs/tripadvisor.log
+}
+
+function talb()
+{
+    lbDate=`date +%F-%H`
+    currLb="/etc/httpd-MAINLINE/logs/lookback-hourly/lookback.${lbDate}.log"
+    if [ ! -f "$currLb" ];
+    then
+        touch "$currLb"
+    fi
+
+    tail -f "$currLb"
 }
 
 function svn_conflicts()
