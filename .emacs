@@ -17,6 +17,9 @@
 
 (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m) ;; strips ctrl-m from shell out
 
+;; iedit - for variable renaming and the like
+(require 'iedit)
+
 (autoload 'css-mode "css-mode" "Mode for CSS files" t)
 
 ;; velocity syntax hilighting
@@ -141,6 +144,17 @@
   (interactive)
   (start-process "async-flush-velocity" "*Messages*" "tweak" "FLUSH_VELOCITY")
   (message "Flushed velocity"))
+
+;;
+;; (defun get-trans (string)
+;;   (interactive)
+;;   (insert (shell-command-to-string "date")))
+
+;; ;; and bind get-trans
+;; (global-set-key
+;;  (kbd "C-x t")
+;;  'get-trans
+;;  )
 
 (defun trip-vm-mode()
   (interactive)
