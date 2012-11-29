@@ -1,4 +1,5 @@
 
+
 function findtrtop {
         candidate=`pwd`
         while true; do
@@ -30,6 +31,7 @@ function trtop
 function trdiff
 {
     svn_branch=`svn branch 2>/dev/null | sed -e 's/.*/&/'`
+    svn_url=`svn info | awk '/^URL: / { print $2 }'`
     bug_number=0
 
     if [[ "$svn_branch" == "MAINLINE" || "$svn_branch" == "PRERELEASE" || "$svn_branch" == "PRODUCTION" ]]; then
@@ -42,6 +44,9 @@ function trdiff
             echo "usage: trdiff <bug number>"
             return 1
         fi
+    elif [[ $svn_url =~ 'com/svn/iphone' || $svn_url =~ 'com/svn/android' ]]; then
+        echo "Taking iOS/Android diff"
+        echo "TODO!!"
     else
         svn diff -B
     fi
@@ -64,17 +69,32 @@ function trdiff
     decoded=`echo $SVNTR_AUTH | base64 -d`
     auth=(${decoded//:/ })
     username="${auth[0]}@tripadvisor.com"
-    tabugz="bugz -b https://bugs.tripadvisor.com/ -u $username -p ${auth[1]}"
+    password="${auth[1]}"
+    tabugz="bugz -b https://bugs.tripadvisor.com/ -u $username -p $password"
 
     # Attach the patch to a bug automatically & update bug status
     if [[ "$bug_number" -gt 60000 ]]; then
         echo "Uploading diff to bugzilla & grabbing bug"
-        $tabugz attach --patch -d "proposed fix in $destfile" $bug_number $destfile
+        echo -n "Bug comment: "
+        read comment
+        $tabugz attach --patch -d "$comment" $bug_number $destfile
         $tabugz modify -s ASSIGNED -a "$username" $bug_number
     fi
 }
 
-export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
+# Closes a bug and comments "Verified on hare"
+function trverify
+{
+    if (( $# == 1 )); then
+        bug_number=$1
+    else
+        echo "usage: trverify <bug number>"
+        return 1
+    fi
+    bugz --base=https://bugs.tripadvisor.com modify --status CLOSED --resolution FIXED -c "Verified on hare." $bug_number
+}
+
+##export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
 
 export PATH=$PATH:~/bin/
 
@@ -98,6 +118,8 @@ if [[ !("$PROMPT_COMMAND" =~ "findtrtop") ]];
     then    
     export PROMPT_COMMAND="findtrtop; $PROMPT_COMMAND"
 fi
+
+alias svncleanall='for dir in /home/nathan/trsrc*; do pushd $dir; svn cleanup; popd; done'
 
 # Point back to my macbook
 function xtomac()
@@ -147,6 +169,8 @@ alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .
 alias df='df -h'
 alias du='du -h'
 
+alias sx='sudo $TRTOP/scripts/httpd_stop.sh'
+
 function gotr()
 {
     cd $TRTOP
@@ -167,6 +191,11 @@ function goja()
     cd $TRTOP/tr/com/TripResearch/
 }
 
+function gom()
+{
+    cd $TRTOP/tr/com/TripResearch/servlet/mobile/
+}
+
 function gocss()
 {
     cd $TRTOP/site/css2/
@@ -177,14 +206,19 @@ function gos()
     cd $TRTOP/site/
 }
 
-function mcss()
+function css()
 {
     make -C $TRTOP/site/css2/ && tfc && tfv
 }
 
-function golog()
+function js()
 {
-    ssh nmdev screen -r log ## TODO not quite right
+    make -C $TRTOP/site/js3/ && tfj
+}
+
+function gologs()
+{
+    cd /etc/httpd-MAINLINE/logs/
 }
 
 function tfv()
@@ -269,11 +303,11 @@ function talog()
 
 function talb()
 {
-    lbDate=`date +%F-%H`
-    currLb="/etc/httpd-MAINLINE/logs/lookback-hourly/lookback.${lbDate}.log"
+    currLb="/etc/httpd-MAINLINE/logs/lookback-hourly/lookback.$(date +%F-%H).log"
     if [ ! -f "$currLb" ];
     then
-        touch "$currLb"
+        curl http://gnm-dev.dhcp.tripadvisor.com >/dev/null
+        sleep 5;
     fi
 
     tail -f "$currLb"
@@ -281,7 +315,12 @@ function talb()
 
 function svn_conflicts()
 {
-    svn st | grep "^\w*C"
+    svn st | grep "^\s*C"
+}
+
+function delete_flymake()
+{
+    find ./ -name "*_flymake.js" | xargs rm
 }
 
 function svn_rm_nonworking()
@@ -306,7 +345,7 @@ function selenium_mobile()
 
 function selenium_tablet()
 {
-    $TRTOP/scripts/pythontr.sh $TRTOP/tests/selenium/run-tests -t tablet
+    $TRTOP/tests/selenium/run-tests -u gnm-dev.dhcp.tripadvisor.com -t tablet
 }
 
 # Run both
@@ -318,7 +357,39 @@ function selenium_all()
 
 function trunit
 {
+    export ENSURE_PURE_UNIT_TESTS=true
     javatr.sh org.junit.runner.JUnitCore com.TripResearch.${1}
+}
+
+alias tm='psql -h rivendell -U tripmaster'
+alias tm-dev='psql -h dev-db -U tripmaster'
+alias tm-media='psql -h rivendell -U tripmaster_media'
+alias tm-media-dev='psql -h dev-db -U tripmaster_media'
+alias tm-tools='psql -h tools-db -U tripmaster'
+alias tm-tools-dev='psql -h tools-db -U tripmaster_tools'
+alias tm-test='psql -h test-db -U tripmaster tripmaster_test'
+alias tm-test-dev='psql -h test-db -U tripmaster tripmaster_test_wasche-dev'
+
+function tab()
+{
+  (
+    cd $TRTOP
+    if [[ $# -gt 0 ]]; then
+      echo ./scripts/tabuild "$@"
+      ./scripts/tabuild "$@"
+    else
+      echo ./scripts/tabuild -rf
+      ./scripts/tabuild -rf
+    fi
+  )
+}
+
+function f {
+  ack -i $@ $TRTOP/site/js3 $TRTOP/site/css2 $TRTOP/site/velocity_redesign $TRTOP/tr
+}
+
+function F {
+  ack $@ $TRTOP/site/js3 $TRTOP/site/css2 $TRTOP/site/velocity_redesign $TRTOP/tr
 }
 
 if [ "$PS1" ]; then
