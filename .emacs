@@ -172,6 +172,8 @@
 
 ;; vm-mode doesn't seem to do colors automatically even though it loads...
 (global-set-key (kbd "C-x y") 'trip-vm-mode)
+;; set goto-line to match eclipse
+(global-set-key (kbd "C-x g") 'goto-line)
 
 ;; window navigation key bindings
 (global-set-key "\C-xa" 'windmove-left)
@@ -335,3 +337,4 @@
 (require 'semantic-ia)
 (require 'semantic-gcc)
 (semantic-mru-bookmark-mode)
+(put 'downcase-region 'disabled nil)
