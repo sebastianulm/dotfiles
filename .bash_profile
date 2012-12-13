@@ -79,7 +79,18 @@ function trdiff
         read comment
         $tabugz attach --patch -d "$comment" $bug_number $destfile
         $tabugz modify -s ASSIGNED -a "$username" $bug_number
+        mobile_say "!bug ${bug_number}"
     fi
+}
+
+function mobile_say
+{
+    if [ $# -eq 1 ]; then
+    for fifo in ~/.weechat/weechat_fifo_*
+    do
+        echo -e "*${1}" >$fifo
+    done
+fi
 }
 
 # Closes a bug and comments "Verified on hare"
@@ -92,6 +103,11 @@ function trverify
         return 1
     fi
     bugz --base=https://bugs.tripadvisor.com modify --status CLOSED --resolution FIXED -c "Verified on hare." $bug_number
+}
+
+function owl_commits
+{
+    curl https://owl.tripadvisor.com/status/nmerritt/recent/hoots.txt | grep "#"
 }
 
 ##export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
@@ -164,7 +180,11 @@ data_update()
     update_fbrs
 }
 
-alias top='htop'
+if which htop >/dev/null 2>&1
+then
+  alias top='htop'
+fi
+
 alias trown='pushd .;cd $TRTOP;sudo chown -f -R nathan _build lib data scripts .triprc .subversion svntr.log /tmp/svntr.log RUNMODE /usr/local/tripadvisor/locales /usr/local/tripadvisor/fbrs;popd'
 alias df='df -h'
 alias du='du -h'
@@ -361,6 +381,12 @@ function trunit
     javatr.sh org.junit.runner.JUnitCore com.TripResearch.${1}
 }
 
+function trunit_failonly()
+{
+    cd $TRTOP
+    make test | grep -v "Running" | grep -v "Failures: 0"
+}
+
 alias tm='psql -h rivendell -U tripmaster'
 alias tm-dev='psql -h dev-db -U tripmaster'
 alias tm-media='psql -h rivendell -U tripmaster_media'
@@ -368,7 +394,6 @@ alias tm-media-dev='psql -h dev-db -U tripmaster_media'
 alias tm-tools='psql -h tools-db -U tripmaster'
 alias tm-tools-dev='psql -h tools-db -U tripmaster_tools'
 alias tm-test='psql -h test-db -U tripmaster tripmaster_test'
-alias tm-test-dev='psql -h test-db -U tripmaster tripmaster_test_wasche-dev'
 
 function tab()
 {
