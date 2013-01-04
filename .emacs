@@ -137,13 +137,19 @@
 (defun trip-css-mode()
   (interactive)
   (css-mode)
-  (flymake-mode t))
+  (flymake-mode t)
+  (add-hook 'after-save-hook 'less-save-hook nil 'true)))
 
 ;; TODO: generify so it can flush css/js/features too
 (defun vm-save-hook()
   (interactive)
   (start-process "async-flush-velocity" "*Messages*" "tweak" "FLUSH_VELOCITY")
   (message "Flushed velocity"))
+
+(defun less-save-hook()
+  (interactive)
+  (start-process "async-flush-velocity" "*Messages*" "mless")
+  (message "built less"))
 
 ;;
 ;; (defun get-trans (string)
@@ -207,6 +213,7 @@
                                 ("\\.vm\\'" . trip-vm-mode)
                                 ("\\.js\\'" . trip-js-mode)
                                 ("\\.css\\'" . trip-css-mode)
+                                ("\\.less\\'" . trip-css-mode)
                                 ) auto-mode-alist))
 
 ;; Put autosave files (ie #foo#) in one place, *not*

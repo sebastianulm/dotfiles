@@ -13,3 +13,6 @@
 [submodule ".emacs.d/autopair"]
 	path = .emacs.d/autopair
 	url = git://github.com/capitaomorte/autopair.git
+[submodule ".emacs.d/less-css-mode"]
+	path = .emacs.d/less-css-mode
+	url = git://github.com/purcell/less-css-mode.git

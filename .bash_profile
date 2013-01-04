@@ -79,18 +79,21 @@ function trdiff
         read comment
         $tabugz attach --patch -d "$comment" $bug_number $destfile
         $tabugz modify -s ASSIGNED -a "$username" $bug_number
-        mobile_say "!bug ${bug_number}"
+        echo "Review please? !bug ${bug_number}" | mobile_irc
     fi
 }
 
-function mobile_say
+# Says something in #mobile, and then pipe it back to STDOUT
+function mobile_irc
 {
-    if [ $# -eq 1 ]; then
-    for fifo in ~/.weechat/weechat_fifo_*
+    while read data
     do
-        echo -e "*${1}" >$fifo
+        for fifo in ~/.weechat/weechat_fifo_*
+        do
+            echo -e "*${data}" > $fifo
+            echo "${data}"
+        done
     done
-fi
 }
 
 # Closes a bug and comments "Verified on hare"
@@ -231,6 +234,11 @@ function css()
     make -C $TRTOP/site/css2/ && tfc && tfv
 }
 
+function mless()
+{
+    make -C $TRTOP/site/css2/mobile/
+}
+
 function js()
 {
     make -C $TRTOP/site/js3/ && tfj
@@ -345,7 +353,7 @@ function delete_flymake()
 
 function svn_rm_nonworking()
 {
-    svn st –no-ignore |grep -e ^\? -e ^I | awk ‘{print $2}’| xargs -r rm -r
+    svn status | grep '^?' | awk '{print $2}' | xargs rm -rf
 }
 
 function get_patches()
