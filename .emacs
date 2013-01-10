@@ -22,6 +22,9 @@
 
 (autoload 'css-mode "css-mode" "Mode for CSS files" t)
 
+;;(load-file "~/.emacs.d/less-css-mode/less-css-mode.el")
+;;(autoload 'less-css-mode "less-css-mode" "Mode for Less files" t)
+
 ;; velocity syntax hilighting
 (autoload 'turn-on-vtl-mode "vtl" "Velocity syntax hilighting" t)
 (add-hook 'html-mode-hook 'turn-on-vtl-mode t t)
@@ -137,10 +140,13 @@
 (defun trip-css-mode()
   (interactive)
   (css-mode)
-  (flymake-mode t)
-  (add-hook 'after-save-hook 'less-save-hook nil 'true)))
+  (flymake-mode t))
 
-;; TODO: generify so it can flush css/js/features too
+(defun trip-less-mode()
+  (interactive)
+  (css-mode)
+  (add-hook 'after-save-hook 'less-save-hook nil 'true))
+
 (defun vm-save-hook()
   (interactive)
   (start-process "async-flush-velocity" "*Messages*" "tweak" "FLUSH_VELOCITY")
@@ -148,8 +154,8 @@
 
 (defun less-save-hook()
   (interactive)
-  (start-process "async-flush-velocity" "*Messages*" "mless")
-  (message "built less"))
+  (start-process "async-build-less" "*Messages*" "mless")
+  (message "Built less"))
 
 ;;
 ;; (defun get-trans (string)
@@ -213,7 +219,7 @@
                                 ("\\.vm\\'" . trip-vm-mode)
                                 ("\\.js\\'" . trip-js-mode)
                                 ("\\.css\\'" . trip-css-mode)
-                                ("\\.less\\'" . trip-css-mode)
+                                ("\\.less\\'" . trip-less-mode)
                                 ) auto-mode-alist))
 
 ;; Put autosave files (ie #foo#) in one place, *not*

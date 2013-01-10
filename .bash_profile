@@ -113,9 +113,7 @@ function owl_commits
     curl https://owl.tripadvisor.com/status/nmerritt/recent/hoots.txt | grep "#"
 }
 
-##export ACK_OPTIONS='--type-set m4=.m4 --type-set vm=.vm --type-set as=.as3 --invert-file-match -G ^(data|langs)/|site/(js[23]|css2?)/.*-(c|gen)\.(js|css)'
-
-export PATH=$PATH:~/bin/
+export PATH=$PATH:~/bin/:~/Library/android-sdk-mac_x86/platform-tools/
 
 alias apt-get='sudo apt-get'
 
@@ -232,11 +230,6 @@ function gos()
 function css()
 {
     make -C $TRTOP/site/css2/ && tfc && tfv
-}
-
-function mless()
-{
-    make -C $TRTOP/site/css2/mobile/
 }
 
 function js()
